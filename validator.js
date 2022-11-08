@@ -1,6 +1,6 @@
 const Joi = require("@hapi/joi");
 
-const newUserValidator = (data) => {
+const validateData = (data) => {
   const schema = Joi.object({
     user_name: Joi.string().min(5).max(16).required(),
     dob: Joi.date().required(),
@@ -18,5 +18,5 @@ const newUserValidator = (data) => {
 };
 
 module.exports = {
-  newUserValidator,
+  validateData,
 };

@@ -1,26 +1,13 @@
 const User = require("../models/user");
-const { newUserValidator } = require("../validator");
-
-function calculateAge(dob) {
-  let TODAY = new Date(Date.now());
-  let EIGHTEEN_YEARS_BACK = new Date(
-    new Date(TODAY).getDate() +
-      "/" +
-      new Date(TODAY).getMonth() +
-      "/" +
-      (new Date(TODAY).getFullYear() - 18)
-  );
-  let USER_INPUT = new Date(dob);
-  let result = EIGHTEEN_YEARS_BACK > USER_INPUT;
-  return result;
-}
+const { validateData } = require("../validator");
+const { calculateAge } = require("../utils");
 
 async function insert_user(req, res) {
-  const { error } = newUserValidator(req.body);
+  const { error } = validateData(req.body);
 
-  // checks JOI errors
   if (error) {
     const errorPath = error.details[0].path[0];
+    console.log(errorPath);
 
     const errorType =
       errorPath === "user_name"
@@ -41,7 +28,6 @@ async function insert_user(req, res) {
 
   const usernameExists = await User.findOne({ user_name: req.body.user_name });
   const emailExists = await User.findOne({ email: req.body.email });
-
 
   // checks if user exists
   if (usernameExists || emailExists) {
